@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Container, ThemeProvider } from '@mui/material';
+import { theme } from './theme';
+import EventsContainer from './components/EventsContainer';
+import { createUseStyles } from 'react-jss';
+
+const useStyles = createUseStyles({
+  appPage: {
+    height: "100vh",
+    minWidth: "100%",
+    display: "flex",
+    padding: " 0 9.35%" // Instead of 200 (calculated the percentage)
+  }
+});
 
 function App() {
+  const classes = useStyles();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme} >
+      <Container className={classes.appPage}>
+        <EventsContainer />
+      </Container>
+    </ThemeProvider>
   );
 }
 
