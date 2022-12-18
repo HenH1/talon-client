@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { baseURL } from '../utils/Consts';
 import axios from 'axios';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { convertEventTypeStringForUI } from '../utils/common';
+import { convertEventTypeStringForUI } from '../utils/Common';
 
 const useStyles = createUseStyles({
     select: {
@@ -62,11 +62,10 @@ const EventTypeSelect = (props: IEventTypeSelectProps) => {
     const [eventTypesName, setEventTypesName] = useState<Array<string>>([]);
     const classes = useStyles();
 
-    const getEventTypes = (url: string) => {
-        axios.get(baseURL + url).then((response) => {
-            const arrNewStrEvents = response.data.map((val: string) => convertEventTypeStringForUI(val));
-            setEventTypesName(arrNewStrEvents);
-        });
+    const getEventTypes = async (url: string) => {
+        const response = await axios.get(baseURL + url);
+        const arrNewStrEvents = response.data.map((val: string) => convertEventTypeStringForUI(val));
+        setEventTypesName(arrNewStrEvents);
     };
     const handleChange = (event: SelectChangeEvent<typeof eventTypesName>) => {
         const selected = event.target.value;

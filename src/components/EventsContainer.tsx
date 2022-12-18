@@ -10,32 +10,11 @@ import { baseURL } from '../utils/Consts';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Pagination from './Pagination';
-import { convertEventTypeStringForUI, getColorForSeverity, convertEventTypeStringForReq } from '../utils/common';
+import { convertEventTypeStringForUI, convertEventTypeStringForReq } from '../utils/Common';
 import { IEventColumn } from '../models/IEventColumn';
 import EventsTable from './EventsTable';
 import { createUseStyles } from 'react-jss';
-
-const columns: readonly IEventColumn[] = [
-    {
-        id: 'eventType', label: 'Event Type', width: "25%",
-        format: (eventType) => convertEventTypeStringForUI(eventType)
-    },
-    {
-        id: 'severity', label: 'Severity', width: "20%",
-        format: (severity) => <Chip label={severity.toUpperCase()} sx={{ backgroundColor: getColorForSeverity(severity), fontSize: "11px", borderRadius: "8px" }} />
-    },
-    {
-        id: 'user', label: 'User', width: "25%",
-        format: (user: IUser) => <div>{user.name}<div style={{ color: theme.palette.text.secondary, fontSize: "13px" }}>{user.email}</div></div>
-    },
-    {
-        id: 'time', label: 'Date', width: "25%",
-        format: (timeStamp) => {
-            const date = new Date(timeStamp);
-            return (<div style={{ fontSize: "13px" }}> {dateFormat(date, "yyyy/mm/dd | hh:MM:ss")}</div>);
-        }
-    },
-];
+import { Severity } from "../utils/Consts";
 
 const useStyles = createUseStyles({
     headlineText: {
@@ -54,6 +33,26 @@ const useStyles = createUseStyles({
         textAlign: "left",
         padding: "17px 0 15px 16px",
         margin: 0,
+    },
+    severityColorLow: {
+        backgroundColor: "#3A90E5"
+    },
+    severityColorMedium: {
+        backgroundColor: "#FFB547"
+    },
+    severityColorHigh: {
+        backgroundColor: "#F06161"
+    },
+    userMailCell: {
+        color: theme.palette.text.secondary,
+        fontSize: "13px"
+    },
+    dateCell: {
+        fontSize: "13px"
+    },
+    severityCell: {
+        fontSize: "11px",
+        borderRadius: "8px"
     }
 });
 
@@ -66,11 +65,43 @@ const EventsContainer = () => {
     const [rows, setRows] = useState<Array<IEvent>>([]);
     const [selectedEventTypesName, setSelectedEventTypesName] = useState<Array<string>>([]);
 
-    const getData = (url: string) => {
-        axios.get(baseURL + url).then((response) => {
-            setRows(response.data.data);
-            setRowsCount(response.data.count);
-        });
+    const columns: readonly IEventColumn[] = [
+        {
+            id: 'eventType', label: 'Event Type', width: "25%",
+            format: (eventType) => convertEventTypeStringForUI(eventType)
+        },
+        {
+            id: 'severity', label: 'Severity', width: "20%",
+            format: (severity) => <Chip className={`${classes.severityCell} ${getColorForSeverity(severity)}`} label={severity.toUpperCase()} />
+        },
+        {
+            id: 'user', label: 'User', width: "25%",
+            format: (user: IUser) => <div>{user.name}<div className={classes.userMailCell}>{user.email}</div></div>
+        },
+        {
+            id: 'time', label: 'Date', width: "25%",
+            format: (timeStamp) => {
+                const date = new Date(timeStamp);
+                return (<div className={classes.dateCell}> {dateFormat(date, "yyyy/mm/dd | hh:MM:ss")}</div>);
+            }
+        },
+    ];
+
+    const getColorForSeverity = (severity: string) => {
+        switch (severity) {
+            case Severity.LOW:
+                return classes.severityColorLow;
+            case Severity.MEDIUM:
+                return classes.severityColorMedium;
+            case Severity.HIGH:
+                return classes.severityColorHigh;
+        }
+    }
+
+    const getData = async (url: string) => {
+        const response = await axios.get(baseURL + url);
+        setRows(response.data.data);
+        setRowsCount(response.data.count);
     };
 
     const handleChangePage = (newPage: number) => {

@@ -1,5 +1,3 @@
-import { Severity } from "./Consts";
-
 // converting loginFailed to Login failed
 const convertEventTypeStringForUI = (eventType: string) => {
     const convertedString = eventType.replace(/[A-Z]/g, ' $&').trim().toLowerCase();
@@ -16,15 +14,4 @@ const convertEventTypeStringForReq = (eventType: string) => {
     return convertedString;
 }
 
-const getColorForSeverity = (severity: string) => {
-    switch (severity) {
-        case Severity.LOW:
-            return "#3A90E5";
-        case Severity.MEDIUM:
-            return "#FFB547";
-        case Severity.HIGH:
-            return "#F06161";
-    }
-}
-
-export { convertEventTypeStringForUI, convertEventTypeStringForReq, getColorForSeverity };
+export { convertEventTypeStringForUI, convertEventTypeStringForReq };

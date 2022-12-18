@@ -1,5 +1,4 @@
 import { IUser } from "./IUser";
-import { Severity } from "../Consts";
 
 export interface IEvent {
     _id: number;

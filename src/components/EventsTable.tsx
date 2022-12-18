@@ -14,17 +14,18 @@ const useStyles = createUseStyles({
     tableCellHeadline: {
         background: theme.palette.background.paper,
         borderBottom: "2px solid #3D4752",
-        paddingLeft: "57px",
         height: "25px"
     },
     tableCell: {
         borderBottom: "2px solid #3D4752",
-        paddingLeft: "57px",
         height: "42px"
     },
     tableContainer: {
         maxHeight: "440px",
         minHeight: "440px",
+    },
+    firstCell: {
+        paddingLeft: "5%",
     }
 });
 
@@ -36,9 +37,9 @@ const EventsTable = (props: IEventsTableProps) => {
             <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                     <TableRow>
-                        {props.columns.map((column) => (
+                        {props.columns.map((column, index) => (
                             <TableCell
-                                className={classes.tableCellHeadline}
+                                className={`${classes.tableCellHeadline} ${index === 0 ? classes.firstCell : ""}`}
                                 key={column.id}
                                 sx={{ width: column.width }}
                             >
@@ -52,10 +53,10 @@ const EventsTable = (props: IEventsTableProps) => {
                         .map((row) => {
                             return (
                                 <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                                    {props.columns.map((column) => {
+                                    {props.columns.map((column, index) => {
                                         const value = row[column.id];
                                         return (
-                                            <TableCell key={column.id} sx={{ width: column.width }} className={classes.tableCell}
+                                            <TableCell key={column.id} className={`${classes.tableCell} ${index === 0 ? classes.firstCell : ""}`} sx={{ width: column.width }}
                                             >
                                                 {column.format && column.format(value)}
                                             </TableCell>
